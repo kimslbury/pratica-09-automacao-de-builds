@@ -62,3 +62,7 @@ Em cada push para `main`, o workflow:
 
 O build remoto usa o runner Ubuntu do GitHub Actions. A execução local requer
 Docker Desktop com a virtualização habilitada no Windows.
+
+Para validar o cache, uma nova execução do workflow deve ser disparada após
+uma alteração no código. O resumo do Docker Build registra as camadas
+reaproveitadas e permite comparar a duração com a primeira execução.
