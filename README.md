@@ -43,3 +43,22 @@ docker run -d -p 5000:5000 seu-usuário/my-flask-app
 ```
 
 - A aplicação responderá em duas rotas na web: http://localhost:5000/health-check e http://localhost:5000/hello?name=guijac
+
+## Automação no GitHub Actions
+
+Para manter a estrutura do projeto-base e executar a prática no GitHub, o arquivo
+`.github/workflows/build.yml` substitui o pipeline executado originalmente no
+GitLab CI. O arquivo `.gitlab-ci.yml` original foi mantido como referência do
+material-base e não é executado pelo GitHub.
+
+Em cada push para `main`, o workflow:
+
+1. instala as dependências e executa os testes Python;
+2. configura o Docker Buildx;
+3. autentica no GitHub Container Registry usando `GITHUB_TOKEN`;
+4. constrói a imagem com as tags `latest` e `sha-<commit>`;
+5. publica a imagem em `ghcr.io/<proprietario>/<repositorio>`;
+6. reutiliza o cache de camadas por meio do cache do GitHub Actions.
+
+O build remoto usa o runner Ubuntu do GitHub Actions. A execução local requer
+Docker Desktop com a virtualização habilitada no Windows.
