@@ -52,6 +52,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Baixar imagem anterior para o cache
+        run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest || true
+
       - name: Gerar tags da imagem
         id: meta
         uses: docker/metadata-action@v5
@@ -68,5 +71,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=build
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            type=gha,scope=build
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           cache-to: type=gha,mode=max,scope=build
